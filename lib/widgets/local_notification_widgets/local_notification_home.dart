@@ -32,6 +32,32 @@ class _LocalNotificationHomeState extends State<LocalNotificationHome> {
   void onClickNotification(String? payload){
     Navigator.pushNamed(context, '/SuccessfulNotification');
   }
+  void navToHomeScreen() async {
+    context.read<AppModel>().setRoute('/Home');
+  }
+
+  Future doSpecificNotificationFunctionality(int index) async {
+    switch (mediaElemets[index]) {
+      case "Notify Immediately":
+        ShowNotification();
+        break;
+      case "Notify After 15 sec":
+        ScheduleNotification();
+        break;
+    }
+  }
+
+  void ShowNotification() {
+    NotificationApi.ShowNotification(
+        title: "Hey poorva",
+        body: "We're very proud of you, congragulations for your career life");
+  }
+  void ScheduleNotification() {
+    NotificationApi.ScheduleNotification(
+        title: "Hey poorva",
+        body: "Are you ready for Dinner?",
+        scheduledDate: DateTime.now());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +74,7 @@ class _LocalNotificationHomeState extends State<LocalNotificationHome> {
                   itemCount: mediaElemets.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () => doSpecificMediaFunctionality(index),
+                      onTap: () => doSpecificNotificationFunctionality(index),
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(20),
@@ -80,26 +106,5 @@ class _LocalNotificationHomeState extends State<LocalNotificationHome> {
             ),
           ],
         ));
-  }
-
-  void navToHomeScreen() async {
-    context.read<AppModel>().setRoute('/Home');
-  }
-
-  Future doSpecificMediaFunctionality(int index) async {
-    switch (mediaElemets[index]) {
-      case "Notify Immediately":
-        ShowNotification();
-        break;
-      case "Notify After 15 sec":
-        Navigator.pushNamed(context, '/VideoPicker');
-        break;
-    }
-  }
-
-  void ShowNotification() {
-    NotificationApi.ShowNotification(
-        title: "Hey poorva",
-        body: "We're very proud of you, congragulations for your career life");
   }
 }
