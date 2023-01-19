@@ -5,6 +5,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_features/models/app_model.dart';
 import 'package:flutter_features/widgets/home_page.dart';
 import 'package:flutter_features/widgets/local_notification_widgets/local_notification_home.dart';
+import 'package:flutter_features/utilities/notification_api.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -29,14 +31,6 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // This widget is the root of your application.
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // context.read<AppModel>().setRoute('/Home');
-  }
-
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

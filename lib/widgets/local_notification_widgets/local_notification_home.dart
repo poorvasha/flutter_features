@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 import '../../models/app_model.dart';
-import 'notification_api.dart';
+import '../../utilities/notification_api.dart';
 
 class LocalNotificationHome extends StatefulWidget {
   const LocalNotificationHome({super.key});
@@ -15,6 +15,23 @@ class LocalNotificationHome extends StatefulWidget {
 
 class _LocalNotificationHomeState extends State<LocalNotificationHome> {
   List mediaElemets = ["Notify Immediately", "Notify After 15 sec"];
+
+
+  @override
+  void initState() {
+    
+    super.initState();
+    NotificationApi.init(context: context);
+    listenNotification();
+    // context.read<AppModel>().setRoute('/Home');
+  }
+
+  void listenNotification(){
+    NotificationApi.onNotifications.stream.listen((onClickNotification));
+  }
+  void onClickNotification(String? payload){
+    Navigator.pushNamed(context, '/SuccessfulNotification');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,11 +48,7 @@ class _LocalNotificationHomeState extends State<LocalNotificationHome> {
                   itemCount: mediaElemets.length,
                   itemBuilder: (context, index) {
                     return GestureDetector(
-                      onTap: () => NotificationApi.ShowNotification(
-                          id: 1,
-                          title: "Hey poorva",
-                          body:
-                              "We're very proud of you, congragulations for your career life"),
+                      onTap: () => doSpecificMediaFunctionality(index),
                       child: Card(
                         child: Padding(
                           padding: const EdgeInsets.all(20),
@@ -86,7 +99,6 @@ class _LocalNotificationHomeState extends State<LocalNotificationHome> {
 
   void ShowNotification() {
     NotificationApi.ShowNotification(
-        id: 1,
         title: "Hey poorva",
         body: "We're very proud of you, congragulations for your career life");
   }

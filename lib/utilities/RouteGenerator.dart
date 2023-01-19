@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_features/widgets/local_notification_widgets/local_notification_home.dart';
+import 'package:flutter_features/widgets/local_notification_widgets/successful_notification.dart';
 import '../main.dart';
 import '../widgets/adverse_scenario_widgets/page_not_found.dart';
 import '../widgets/home_page.dart';
@@ -59,6 +60,7 @@ class RouteGenerator {
       '/VideoPicker' : (context) => const VideoPicker(),
       '/FilePicker' : (context) => const FilePicker(),
       '/LocalNotificationHome' : (context) => const LocalNotificationHome(),
+      '/SuccessfulNotification' : (context) => const Successfulnotification(),
     };
   }
 }
