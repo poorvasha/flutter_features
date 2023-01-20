@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_features/widgets/local_notification_widgets/local_notification_home.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:flutter_native_timezone/flutter_native_timezone.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -23,6 +24,8 @@ class NotificationApi {
 
     if (initSchedule) {
       tz.initializeTimeZones();
+      final String timeZone = await FlutterNativeTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(timeZone));
     }
   }
 
@@ -81,7 +84,7 @@ class NotificationApi {
       String? body,
       String? payload,
       required DateTime scheduledDate}) async {
-    _notifications.zonedSchedule(id, title, body, scheduleDaily(const Time(8)),
+    _notifications.zonedSchedule(id, title, body, scheduleDaily(const Time(8), Day(0)),
         await _notificationDetails(),
         payload: payload,
         androidAllowWhileIdle: true,
@@ -90,10 +93,10 @@ class NotificationApi {
         matchDateTimeComponents: DateTimeComponents.time);
   }
 
-  static tz.TZDateTime scheduleDaily(Time time) {
+  static tz.TZDateTime scheduleDaily(Time time, Day date) {
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = tz.TZDateTime(
-        tz.local, now.year, now.month, time.hour, time.minute, time.second);
+        tz.local, now.year, now.month, date.value == 0 ? now.day : date.value, time.hour, time.minute, time.second);
 
     return scheduledDate.isBefore(now)
         ? scheduledDate.add(Duration(days: 1))
@@ -121,7 +124,7 @@ class NotificationApi {
   }
 
   static tz.TZDateTime scheduleWeekly(Time time, {required List<int> days}) {
-    tz.TZDateTime scheduledDate = scheduleDaily(time);
+    tz.TZDateTime scheduledDate = scheduleDaily(time, Day(0));
 
     while (days.contains(scheduledDate.weekday)) {
       return scheduledDate.add(Duration(days: 1));
@@ -136,7 +139,7 @@ class NotificationApi {
       String? payload,
       required DateTime scheduledDate}) async {
     _notifications.zonedSchedule(id, title, body,
-        scheduleMonthly(const Time(8)), await _notificationDetails(),
+        scheduleMonthly(const Time(8), date : 12), await _notificationDetails(),
         payload: payload,
         androidAllowWhileIdle: true,
         uiLocalNotificationDateInterpretation:
@@ -144,8 +147,8 @@ class NotificationApi {
         matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime);
   }
 
-  static tz.TZDateTime scheduleMonthly(Time time) {
-    tz.TZDateTime scheduledDate = scheduleDaily(time);
+  static tz.TZDateTime scheduleMonthly(Time time,  { required int date}) {
+    tz.TZDateTime scheduledDate = scheduleDaily(time, Day(12));
     return scheduledDate;
   }
 }

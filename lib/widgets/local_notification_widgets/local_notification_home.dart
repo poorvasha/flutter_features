@@ -53,7 +53,7 @@ class _LocalNotificationHomeState extends State<LocalNotificationHome> {
         body: "We're very proud of you, congragulations for your career life");
   }
   void ScheduleNotification() {
-    NotificationApi.ScheduleNotification(
+    NotificationApi.ScheduleMonthlyNotification(
         title: "Hey poorva",
         body: "Are you ready for Dinner?",
         scheduledDate: DateTime.now());
